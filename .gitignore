@@ -1,0 +1,8 @@
+# Dirs
+.vs/
+bin/
+obj/
+
+# Files
+*.vcxproj*
+*.sln
