@@ -56,6 +56,9 @@ workspace "Filbert"
         kind "SharedLib"
         defines { "FLB_BUILD_DLL" }
 
+        pchheader("filbertPCH.h")
+        pchsource("Filbert/src/filbertPCH.cpp")
+
         postbuildcommands
 		{
 			("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
