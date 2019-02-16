@@ -1,14 +1,6 @@
 #include <Filbert.h>
 
-class Sandbox : public Filbert::Application
-{
-public:
-	Sandbox() {}
-	~Sandbox() {}
-
-private:
-
-};
+#include "Sandbox.h"
 
 
 Filbert::Application* Filbert::CreateApplication()

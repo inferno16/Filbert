@@ -13,6 +13,11 @@ workspace "Filbert"
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("obj/" .. outputdir .. "/%{prj.name}")
 
+    includedirs
+    {
+        "Filbert/vendor/spdlog/include"
+    }
+
     vpaths 
     {
         ["Header Files"] = {"**.hpp", "**.h" },
