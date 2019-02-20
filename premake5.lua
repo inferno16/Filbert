@@ -8,6 +8,7 @@ workspace "Filbert"
     platforms { "x86", "x64" }
     startproject "Sandbox"
     language "C++"
+    cppdialect "C++17"
     architecture "x64"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -15,6 +16,7 @@ workspace "Filbert"
 
     includedirs
     {
+        "Filbert/src",
         "Filbert/vendor/spdlog/include"
     }
 
@@ -45,12 +47,13 @@ workspace "Filbert"
         optimize "Full"
     
     filter "system:windows"
-        cppdialect "C++17"
         systemversion "latest"
         defines { "FLB_WINDOWS" }
     filter {}
     
     -- Project definitions
+    include "Filbert/vendor/GLFW"
+
     project "Filbert"
         location "Filbert"
         kind "SharedLib"
@@ -58,6 +61,17 @@ workspace "Filbert"
 
         pchheader("filbertPCH.h")
         pchsource("Filbert/src/filbertPCH.cpp")
+
+        links 
+        {
+            "GLFW",
+            "opengl32.lib"
+        }
+
+        includedirs
+        {
+            "Filbert/vendor/GLFW/include"
+        }
 
         postbuildcommands
 		{
@@ -72,11 +86,6 @@ workspace "Filbert"
         filter "configurations:Release"
             kind "WindowedApp"
         filter {}
-            
-        includedirs
-        {
-            "Filbert/src"
-        }
         
         links
         {
