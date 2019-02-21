@@ -1,5 +1,9 @@
 #include "filbertPCH.h"
 #include "WindowsWindow.h"
+#include "Events/WindowEvents.h"
+#include "Events/KeyboardEvents.h"
+#include "Events/MouseEvents.h"
+#include "Events/JoystickEvents.h"
 
 namespace Filbert
 {
@@ -11,6 +15,7 @@ namespace Filbert
 
 	void WindowsWindow::Update()
 	{
+		glClear(GL_COLOR_BUFFER_BIT);
 		glfwPollEvents();
 		glfwSwapBuffers(m_Window);
 	}
@@ -30,10 +35,18 @@ namespace Filbert
 			static_cast<int>(m_WindowProps.Size.Height),
 			m_WindowProps.Title.c_str(), nullptr, nullptr
 		);
+		int posX, posY;
+		glfwGetWindowPos(m_Window, &posX, &posY);
+		SetPosition(posX, posY);
 		FLB_ASSERT(m_Window, "Failed to create window!");
 		glfwMakeContextCurrent(m_Window);
 		glfwSetWindowUserPointer(m_Window, this);
 		SetVSync(m_WindowProps.VSync);
+
+		SetWindowCallbacks();
+		SetKeyboardCallbacks();
+		SetMouseCallbacks();
+		SetJoystickCallbacks();
 	}
 
 	void WindowsWindow::Destroy()
@@ -49,5 +62,63 @@ namespace Filbert
 			glfwSwapInterval(0);
 
 		m_WindowProps.VSync = state;
+	}
+	void WindowsWindow::SetWindowCallbacks()
+	{
+		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
+			static_cast<WindowsWindow *>(glfwGetWindowUserPointer(window))
+				->InvokeCallback(WindowClosedEvent());
+		});
+		glfwSetWindowFocusCallback(m_Window, [](GLFWwindow* window, int state) {
+			static_cast<WindowsWindow *>(glfwGetWindowUserPointer(window))
+				->InvokeCallback(WindowFocusChangedEvent(state == GLFW_TRUE));
+		});
+		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int w, int h) {
+			auto data = static_cast<WindowsWindow *>(glfwGetWindowUserPointer(window));
+			data->SetSize(w, h);
+			data->InvokeCallback(WindowResizedEvent(w, h));
+		});
+		glfwSetWindowPosCallback(m_Window, [](GLFWwindow* window, int x, int y) {
+			auto data = static_cast<WindowsWindow *>(glfwGetWindowUserPointer(window));
+			data->SetPosition(x, y);
+			data->InvokeCallback(WindowMovedEvent(x, y));
+		});
+	}
+
+	void WindowsWindow::SetKeyboardCallbacks()
+	{
+		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+			auto data = static_cast<WindowsWindow *>(glfwGetWindowUserPointer(window));
+			if (action == GLFW_RELEASE)
+				data->InvokeCallback(KeyReleasedEvent(key));
+			else
+				data->InvokeCallback(KeyPressedEvent(key, action == GLFW_REPEAT));
+		});
+	}
+
+	void WindowsWindow::SetMouseCallbacks()
+	{
+		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double x, double y) {
+			static_cast<WindowsWindow *>(glfwGetWindowUserPointer(window))
+				->InvokeCallback(MouseMovedEvent(x, y));
+		});
+
+		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int key, int action, int mods) {
+			auto data = static_cast<WindowsWindow *>(glfwGetWindowUserPointer(window));
+			if (action == GLFW_RELEASE)
+				data->InvokeCallback(MouseButtonReleasedEvent(key));
+			else
+				data->InvokeCallback(MouseButtonPressedEvent(key));
+		});
+
+		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double x, double y) {
+			static_cast<WindowsWindow *>(glfwGetWindowUserPointer(window))
+				->InvokeCallback(MouseScrolledEvent(x, y));
+		});
+	}
+
+	void WindowsWindow::SetJoystickCallbacks()
+	{
+		// ToDo: Implement joysick events (glfw does not support them so I might need to modify glfw)
 	}
 }

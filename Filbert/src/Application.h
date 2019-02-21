@@ -1,6 +1,7 @@
 #pragma once
 #include "Core.h"
 #include "Window.h"
+#include "Events/WindowEvents.h"
 
 namespace Filbert
 {
@@ -11,6 +12,7 @@ namespace Filbert
 		~Application();
 
 		void Run();
+		void OnEvent(Event& e);
 	private:
 		std::unique_ptr<Window> m_Window;
 		bool m_Running = true;
