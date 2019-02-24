@@ -2,19 +2,16 @@
 #include "filbertPCH.h"
 #include "Core.h"
 #include "Events/Event.h"
+#include "Types/Vector.h"
 
 namespace Filbert
 {
+	typedef Vector2<ui32> WindowPos;
+	
 	struct WindowSize { 
 		WindowSize(cui32& w = 0, cui32& h = 0) : Width(w), Height(h) {}
 		ui32 Width; 
 		ui32 Height; 
-	};
-
-	struct WindowPos {
-		WindowPos(cui32& x = 0, cui32& y = 0) : X(x), Y(y) {}
-		ui32 X;
-		ui32 Y;
 	};
 
 	struct WindowProperties {
