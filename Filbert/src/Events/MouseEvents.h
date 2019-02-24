@@ -1,5 +1,6 @@
 #pragma once
 #include "Event.h"
+#include "Input.h"
 
 namespace Filbert
 {
@@ -15,23 +16,23 @@ namespace Filbert
 	class FLB_API MouseButtonEvent : public MouseEvent
 	{
 	public:
-		inline ui32 GetButton() const { return m_Button; }
+		inline MouseCode GetButton() const { return m_Button; }
 	protected:
-		MouseButtonEvent(cui32& button) : m_Button(button) {}
-		ui32 m_Button;
+		MouseButtonEvent(const MouseCode& button) : m_Button(button) {}
+		MouseCode m_Button;
 	};
 	
 	class FLB_API MouseButtonPressedEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonPressedEvent(cui32& button) : MouseButtonEvent(button) {}
+		MouseButtonPressedEvent(const MouseCode& button) : MouseButtonEvent(button) {}
 		EVENT_CLASS_TYPE(MouseButtonPressed)
 	};
 
 	class FLB_API MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonReleasedEvent(cui32& button) : MouseButtonEvent(button) {}
+		MouseButtonReleasedEvent(const MouseCode& button) : MouseButtonEvent(button) {}
 		EVENT_CLASS_TYPE(MouseButtonReleased)
 	};
 

@@ -14,19 +14,59 @@ namespace Filbert
 		   0xA4, 0xA5, 0xBA, 0xBB, 0xBC, 0xBD, 0xBE, 0xBF, 0xC0, 0xDB, 0xDC, 0xDD, 0xDE, 0xDF, 0xE2
 	};
 
-	KeyCode Input::FromGLFWKey(ci16& key, const bool& verify) {
-		if ((key >= 0x30 && key <= 0x39) || (key >= 0x41 && key < 0x5A)) {
-			return static_cast<KeyCode>(key);
-		}
+	BiMap<i16, i16> Input::s_GLFWLUT = { { // Left map is native -> GLFW, right is GLFW -> native
+		{ 0x08, 259 }, { 0x09, 258 }, { 0x0D, 257 }, { 0x13, 284 }, { 0x14, 280 }, { 0x1B, 256 }, { 0x21, 266 },
+		{ 0x22, 267 }, { 0x23, 269 }, { 0x24, 268 }, { 0x25, 263 }, { 0x26, 265 }, { 0x27, 262 }, { 0x28, 264 },
+		{ 0x2C, 283 }, { 0x2D, 260 }, { 0x2E, 261 }, { 0x5B, 343 }, { 0x5C, 347 }, { 0x6A, 332 }, { 0x6B, 334 },
+		{ 0x6D, 333 }, { 0x6F, 331 }, { 0x90, 282 }, { 0x91, 281 }, { 0xA0, 340 }, { 0xA1, 344 }, { 0xA2, 341 },
+		{ 0xA3, 345 }, { 0xA4, 342 }, { 0xA5, 346 }, { 0xBA,  59 }, { 0xBB,  61 }, { 0xC0,  96 }, { 0xDE,  39 }
+	} };
 
-		i16 offset = 0;
-		if (key >= 290 && key <= 313) // Function keys
-			offset = 290 - static_cast<i16>(KeyCode::F1);
-		else if (key >= 320 && key <= 329) // Numpad numbers
-			offset = 320 - static_cast<i16>(KeyCode::Num0);
-		if (offset)
-			return static_cast<KeyCode>(key - offset);
 
-		return GetKeyFromLUT(key);
+	i16 Input::ToGLFWKey(const KeyCode & key)
+	{
+		if (key == KeyCode::Separator || key == KeyCode::Decimal) // GLFW has only one of these
+			return 330;
+
+		return TranslateGLFW (
+			static_cast<i16>(key),
+			static_cast<i16>(KeyCode::F1), 290,
+			static_cast<i16>(KeyCode::Num0), 320,
+			static_cast<i16>(KeyCode::Comma), 44,
+			static_cast<i16>(KeyCode::LBracket), 91,
+			s_GLFWLUT.GetLeft()
+		);
+	}
+
+	KeyCode Input::FromGLFWKey(ci16& key) {
+		if (key == 330)
+			return KeyCode::Decimal;
+		else if (key == 335) // ToDo: Add distinction between numpad and regular enter
+			return KeyCode::Return;
+
+		i16 out = TranslateGLFW (key,
+			290, static_cast<i16>(KeyCode::F1),
+			320, static_cast<i16>(KeyCode::Num0),
+			44, static_cast<i16>(KeyCode::Comma),
+			91, static_cast<i16>(KeyCode::LBracket),
+			s_GLFWLUT.GetRight()
+		);
+		return out == -1 ? KeyCode::UNKNOWN : static_cast<KeyCode>(out);
+	}
+	i16 Input::TranslateGLFW(ci16& key, ci16& f1i, ci16& f1o, ci16& num0i, ci16& num0o, ci16& oem1i, ci16& oem1o, ci16& oem2i, ci16& oem2o, const std::unordered_map<i16, i16>& lut)
+	{
+		if (IsKeyInRange(key, 48, 57) || IsKeyInRange(key, 65, 90) || key == 32) // Numbers, letters or space
+			return key;
+
+		if (IsKeyInRange(key, f1i, f1i + 23)) // Function keys
+			return key - (f1i - f1o);
+		else if (IsKeyInRange(key, num0i, num0i + 9)) // Numpad numbers
+			return key - (num0i - num0o);
+		else if (IsKeyInRange(key, oem1i, oem1i + 3)) // Comma(,), minus(-), period(.), slash(/)
+			return key - (oem1i - oem1o);
+		else if (IsKeyInRange(key, oem2i, oem2i + 5) && key != oem2i + 3) // Brackets([]), backslash(\) and 2 vendor/region specific
+			return key - (oem2i - oem2o);
+
+		return lut.find(key) == lut.end() ? -1 : lut.at(key);
 	}
 }

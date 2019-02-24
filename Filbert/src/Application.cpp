@@ -1,6 +1,7 @@
 #include "filbertPCH.h"
 #include "Application.h"
 #include "Input.h"
+#include "Events/KeyboardEvents.h"
 
 namespace Filbert {
 	Application* Application::s_Instance;
@@ -26,5 +27,7 @@ namespace Filbert {
 	{
 		EventDispatcher d(e);
 		d.Dispatch<WindowClosedEvent>([this](WindowClosedEvent& e) { m_Running = false; return true; });
+		if(e.GetEventType() == EventType::KeyPressed)
+			FLB_TRACE("Key pressed: {}", static_cast<int>((static_cast<KeyPressedEvent&>(e)).GetKeyCode()));
 	}
 }

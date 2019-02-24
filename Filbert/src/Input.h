@@ -1,5 +1,6 @@
 #pragma once
 #include "Types/Vector.h"
+#include "Types/BiMap.h"
 
 namespace Filbert
 {
@@ -141,13 +142,13 @@ namespace Filbert
 		Return     = 0x0D, // ENTER key
 		Shift      = 0x10, // SHIFT key
 		Control    = 0x11, // CTRL key
-		Menu       = 0x12, // ALT key
+		Alt        = 0x12, // ALT key
 		Pause      = 0x13, // PAUSE key
 		CapsLock   = 0x14, // CAPS LOCK key
 		Escape     = 0x1B, // ESC key
 		Space      = 0x20, // SPACEBAR
-		Prior      = 0x21, // PAGE UP key
-		Next       = 0x22, // PAGE DOWN key
+		PageUp     = 0x21, // PAGE UP key
+		PageDown   = 0x22, // PAGE DOWN key
 		End        = 0x23, // END key
 		Home       = 0x24, // HOME key
 		Left       = 0x25, // LEFT ARROW key
@@ -193,8 +194,8 @@ namespace Filbert
 		X          = 0x58, // X key
 		Y          = 0x59, // Y key
 		Z          = 0x5A, // Z key
-		LSuper     = 0x5B, // Left Windows key (Microsoft Natural Keyboard)
-		RSuper     = 0x5C, // Right Windows key (Microsoft Natural Keyboard)
+		LSuper     = 0x5B, // Left Windows/Command key
+		RSuper     = 0x5C, // Right Windows/Command key
 		Num0       = 0x60, // Numeric keypad 0 key
 		Num1       = 0x61, // Numeric keypad 1 key
 		Num2       = 0x62, // Numeric keypad 2 key
@@ -241,21 +242,21 @@ namespace Filbert
 		RShift     = 0xA1, // Right SHIFT key
 		LControl   = 0xA2, // Left CONTROL key
 		RControl   = 0xA3, // Right CONTROL key
-		LMenu      = 0xA4, // Left MENU key
-		RMenu      = 0xA5, // Right MENU key
-		OEM_1      = 0xBA, // Windows 2000: for the US standard keyboard, the ';:' key
-		OEM_Plus   = 0xBB, // Windows 2000: for any country/region, the '+' key
-		OEM_Comma  = 0xBC, // Windows 2000: for any country/region, the ',' key
-		OEM_Minus  = 0xBD, // Windows 2000: for any country/region, the '-' key
-		OEM_Period = 0xBE, // Windows 2000: for any country/region, the '.' key
-		OEM_2      = 0xBF, // Windows 2000: for the US standard keyboard, the '/?' key
-		OEM_3      = 0xC0, // Windows 2000: for the US standard keyboard, the '`~' key
-		OEM_4      = 0xDB, // Windows 2000: for the US standard keyboard, the '[{' key
-		OEM_5      = 0xDC, // Windows 2000: for the US standard keyboard, the '\|' key
-		OEM_6      = 0xDD, // Windows 2000: for the US standard keyboard, the ']}' key
-		OEM_7      = 0xDE, // Windows 2000: for the US standard keyboard, the 'single-quote/double-quote' key
-		OEM_8      = 0xDF, // Used for miscellaneous characters; it can vary by keyboard.
-		OEM_102    = 0xE2  // Windows 2000: either the '<>' key or the '\|' key on the RT 102-key keyboard
+		LAlt       = 0xA4, // Left Alt key
+		RAlt       = 0xA5, // Right Alt key
+		Semicolon  = 0xBA, // For the US standard keyboard, the ';:' key
+		Equal      = 0xBB, // For any country/region, the '=+' key
+		Comma      = 0xBC, // For any country/region, the ',<' key
+		Minus      = 0xBD, // For any country/region, the '-_' key
+		Period     = 0xBE, // For any country/region, the '.>' key
+		Slash      = 0xBF, // For the US standard keyboard, the '/?' key
+		Backtick   = 0xC0, // For the US standard keyboard, the '`~' key
+		LBracket   = 0xDB, // For the US standard keyboard, the '[{' key
+		Backslash  = 0xDC, // For the US standard keyboard, the '\|' key
+		RBracket   = 0xDD, // For the US standard keyboard, the ']}' key
+		Quote      = 0xDE, // For the US standard keyboard, the 'single-quote/double-quote' key
+		OEM        = 0xDF, // Used for miscellaneous characters. It can vary by keyboard.
+		OEM_102    = 0xE2  // Either the '<>' key or the '\|' key on the RT 102-key keyboard
 	};
 
 	enum class MouseCode
@@ -280,17 +281,17 @@ namespace Filbert
 
 		static inline i16 ToDXKey(const KeyCode& key) { return static_cast<int>(key); }
 		static inline i16 ToDXMouse(const MouseCode& key) { return static_cast<int>(key); }
-		static inline i16 ToGLFWKey(const KeyCode& key) { return -1; } // ToDo: Implement this function
+		static i16 ToGLFWKey(const KeyCode& key);
 		static inline i16 ToGLFWMouse(const MouseCode& key) { i16 k = static_cast<int>(key); return k - ((k <= 2) ? 1 : 2); }
 
-		static inline KeyCode FromDXKey(ci16& key, const bool& verify) {
+		static inline KeyCode FromDXKey(ci16& key, const bool& verify = true) {
 			return (verify && !IsValidKeyCode(key)) ? KeyCode::UNKNOWN : static_cast<KeyCode>(key);
 		}
-		static inline MouseCode FromDXMouse(ci16& key, const bool& verify) {
+		static inline MouseCode FromDXMouse(ci16& key, const bool& verify = true) {
 			return (verify && !IsValidMouseCode(key)) ? MouseCode::UNKNOWN : static_cast<MouseCode>(key);
 		}
-		static KeyCode FromGLFWKey(ci16& key, const bool& verify);
-		static inline MouseCode FromGLFWMouse(ci16& key, const bool& verify) {
+		static KeyCode FromGLFWKey(ci16& key);
+		static inline MouseCode FromGLFWMouse(ci16& key, const bool& verify = true) {
 			i16 k = key + ((key < 2) ? 1 : 2);
 			return (verify && !IsValidMouseCode(k)) ? MouseCode::UNKNOWN : static_cast<MouseCode>(k);
 		}
@@ -302,11 +303,15 @@ namespace Filbert
 
 	private:
 		static inline bool IsValidKeyCode(ci16& key) { return s_KeyCodesSet.find(key) != s_KeyCodesSet.end(); }
-		static inline bool IsValidMouseCode(ci16& key) { return key >= 0 && key <= 6 && key != 3; }
-		static inline KeyCode GetKeyFromLUT(ci16& key) { return KeyCode::UNKNOWN; } // ToDo: Implement LUT
+		static inline bool IsValidMouseCode(ci16& key) { return IsKeyInRange(key, 0, 6) && key != 3; }
+		static inline bool IsKeyInRange(ci16& key, ci16& start, ci16& end) { return key >= start && key <= end; }
+		// i = input(the key that is converted from), o = output (the key that is converted to)
+		static i16 TranslateGLFW(ci16& key, ci16& f1i, ci16& f1o, ci16& num0i, ci16& num0o, ci16& oem1i,
+			ci16& oem1o, ci16& oem2i, ci16& oem2o, const std::unordered_map<i16, i16>& lut);
 
 	private:
 		static Input* s_Instance;
 		static std::unordered_set<i16> s_KeyCodesSet;
+		static BiMap<i16, i16> s_GLFWLUT;
 	};
 }

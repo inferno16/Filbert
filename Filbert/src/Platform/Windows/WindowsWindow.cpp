@@ -90,9 +90,9 @@ namespace Filbert
 		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
 			auto data = static_cast<WindowsWindow *>(glfwGetWindowUserPointer(window));
 			if (action == GLFW_RELEASE)
-				data->InvokeCallback(KeyReleasedEvent(key));
+				data->InvokeCallback(KeyReleasedEvent(Input::FromGLFWKey(key)));
 			else
-				data->InvokeCallback(KeyPressedEvent(key, action == GLFW_REPEAT));
+				data->InvokeCallback(KeyPressedEvent(Input::FromGLFWKey(key), action == GLFW_REPEAT));
 		});
 	}
 
@@ -106,9 +106,9 @@ namespace Filbert
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int key, int action, int mods) {
 			auto data = static_cast<WindowsWindow *>(glfwGetWindowUserPointer(window));
 			if (action == GLFW_RELEASE)
-				data->InvokeCallback(MouseButtonReleasedEvent(key));
+				data->InvokeCallback(MouseButtonReleasedEvent(Input::FromGLFWMouse(key)));
 			else
-				data->InvokeCallback(MouseButtonPressedEvent(key));
+				data->InvokeCallback(MouseButtonPressedEvent(Input::FromGLFWMouse(key)));
 		});
 
 		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double x, double y) {
