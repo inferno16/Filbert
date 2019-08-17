@@ -2,6 +2,7 @@
 #include "Core.h"
 #include "Window.h"
 #include "Events/WindowEvents.h"
+#include "LayerStack.h"
 
 namespace Filbert
 {
@@ -16,6 +17,11 @@ namespace Filbert
 
 		inline Window& GetWindow() { return *m_Window; }
 		inline static Application& Get() { return *s_Instance; }
+		inline LayerStack& GetLayerStack() { return m_LayerStack; }
+		
+	protected:
+		LayerStack m_LayerStack;
+	
 	private:
 		std::unique_ptr<Window> m_Window;
 		bool m_Running = true;

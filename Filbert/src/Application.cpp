@@ -20,6 +20,7 @@ namespace Filbert {
 	void Application::Run()
 	{
 		while (m_Running) {
+			m_LayerStack.OnUpdate();
 			m_Window->Update();
 		}
 	}
@@ -29,5 +30,6 @@ namespace Filbert {
 		d.Dispatch<WindowClosedEvent>([this](WindowClosedEvent& e) { m_Running = false; return true; });
 		if(e.GetEventType() == EventType::KeyPressed)
 			FLB_TRACE("Key pressed: {}", static_cast<int>((static_cast<KeyPressedEvent&>(e)).GetKeyCode()));
+		m_LayerStack.OnEvent(e);
 	}
 }

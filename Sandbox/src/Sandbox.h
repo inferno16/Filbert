@@ -1,8 +1,7 @@
 #pragma once
 #include <Application.h>
 
-class Sandbox :
-	public Filbert::Application
+class Sandbox : public Filbert::Application
 {
 public:
 	Sandbox();

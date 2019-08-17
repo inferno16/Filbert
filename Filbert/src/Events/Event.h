@@ -39,6 +39,8 @@ namespace Filbert
 		virtual ui32 GetCategoryFlags() const = 0;
 		virtual std::string ToString() const { return GetName(); }
 
+		inline bool IsHandled() { return m_Handled; }
+		inline void SetHandled(const bool& handled) { m_Handled = handled; }
 		friend inline std::ostream& operator<<(std::ostream& out, const Event& e) {
 			return out << e.ToString();
 		}
