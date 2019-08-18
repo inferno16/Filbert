@@ -4,3 +4,6 @@
 [submodule "Filbert/vendor/GLFW"]
 	path = Filbert/vendor/GLFW
 	url = https://github.com/inferno16/glfw
+[submodule "Filbert/vendor/Glad"]
+	path = Filbert/vendor/Glad
+	url = https://github.com/inferno16/glad.git

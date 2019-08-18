@@ -55,11 +55,12 @@ workspace "Filbert"
     
     -- Project definitions
     include "Filbert/vendor/GLFW"
+    include "Filbert/vendor/Glad"
 
     project "Filbert"
         location "Filbert"
         kind "StaticLib"
-        defines { "FLB_BUILD_DLL" }
+        defines { "GLFW_INCLUDE_NONE" }
 
         pchheader("filbertPCH.h")
         pchsource("Filbert/src/filbertPCH.cpp")
@@ -67,12 +68,14 @@ workspace "Filbert"
         links 
         {
             "GLFW",
+            "Glad",
             "opengl32.lib"
         }
 
         includedirs
         {
-            "Filbert/vendor/GLFW/include"
+            "Filbert/vendor/GLFW/include",
+            "Filbert/vendor/Glad/include"
         }
 
     project "Sandbox"

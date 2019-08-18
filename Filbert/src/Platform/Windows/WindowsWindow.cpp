@@ -5,6 +5,8 @@
 #include "Events/MouseEvents.h"
 #include "Events/JoystickEvents.h"
 
+#include <glad/glad.h>
+
 namespace Filbert
 {
 	Window* Window::Create() { return new WindowsWindow(); }
@@ -40,6 +42,8 @@ namespace Filbert
 		SetPosition(posX, posY);
 		FLB_ASSERT(m_Window, "Failed to create window!");
 		glfwMakeContextCurrent(m_Window);
+		int status = gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
+		FLB_ASSERT(status, "Failed to initialize Glad!")
 		glfwSetWindowUserPointer(m_Window, this);
 		SetVSync(m_WindowProps.VSync);
 
