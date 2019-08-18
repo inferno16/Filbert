@@ -3,6 +3,7 @@
 #include "Layer.h"
 
 namespace Filbert {
+	typedef std::shared_ptr<Layer> LayerPtr;
 
 	class FLB_API LayerStack
 	{
@@ -10,25 +11,22 @@ namespace Filbert {
 		LayerStack();
 		~LayerStack();
 
-		void PushLayer(Layer* layer);
-		Layer* PopLayer();
-		void RemoveLayer(Layer* layer);
-		void PushOverlay(Layer* layer);
-		Layer* PopOverlay();
-		void RemoveOverlay(Layer* layer);
+		void PushLayer(LayerPtr layer);
+		LayerPtr PopLayer();
+		void RemoveLayer(LayerPtr layer);
+		void PushOverlay(LayerPtr layer);
+		LayerPtr PopOverlay();
+		void RemoveOverlay(LayerPtr layer);
 		void Destroy();
 
 		void OnUpdate();
 		void OnEvent(Event& e);
 
-		std::vector<Layer*>::iterator begin() { return m_Layers.begin(); }
-		std::vector<Layer*>::iterator end() { return m_Layers.end(); }
+		std::vector<LayerPtr>::iterator begin() { return m_Layers.begin(); }
+		std::vector<LayerPtr>::iterator end() { return m_Layers.end(); }
 
 	private:
-		void _CleanUp();
-
-	private:
-		std::vector<Layer*>::iterator m_LayerInsert;
-		std::vector<Layer*> m_Layers;
+		ui32 m_LayerInsert;
+		std::vector<LayerPtr> m_Layers;
 	};
 }

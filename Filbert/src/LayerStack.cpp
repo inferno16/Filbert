@@ -3,70 +3,71 @@
 
 namespace Filbert {
 	LayerStack::LayerStack()
+		: m_LayerInsert(0)
 	{
-		m_LayerInsert = m_Layers.begin();
 	}
 
 
 	LayerStack::~LayerStack()
 	{
-		_CleanUp();
 	}
 
-	void LayerStack::PushLayer(Layer * layer)
+	void LayerStack::PushLayer(LayerPtr layer)
 	{
-		m_LayerInsert = m_Layers.emplace(m_LayerInsert, layer);
+		m_Layers.emplace(m_Layers.begin() + m_LayerInsert++, layer);
 	}
 
-	Layer * LayerStack::PopLayer()
+	LayerPtr LayerStack::PopLayer()
 	{
-		Layer *layer = *m_LayerInsert;
-		m_Layers.erase(m_LayerInsert--);
+		if (m_LayerInsert <= 0) {
+			return nullptr;
+		}
+
+		LayerPtr layer = m_Layers.at(--m_LayerInsert);
+		m_Layers.erase(m_Layers.begin() + m_LayerInsert);
 		return layer;
 	}
 
-	void LayerStack::RemoveLayer(Layer* layer)
+	void LayerStack::RemoveLayer(LayerPtr layer)
 	{
-		auto end = m_LayerInsert + 1;
-		auto it = std::find(m_Layers.begin(), end, layer);
-		if (it != end)
+		auto begin = m_Layers.begin();
+		auto end = m_Layers.end();
+		auto it = std::find(begin, end, layer);
+		if (it != end && it - begin < m_LayerInsert)
 		{
 			m_Layers.erase(it);
 			m_LayerInsert--;
 		}
 	}
 
-	void LayerStack::PushOverlay(Layer* layer)
+	void LayerStack::PushOverlay(LayerPtr layer)
 	{
 		m_Layers.emplace_back(layer);
 	}
 
-	Layer * LayerStack::PopOverlay()
+	LayerPtr LayerStack::PopOverlay()
 	{
-		if (m_LayerInsert + 1 == m_Layers.end()) {
+		if (m_LayerInsert >= m_Layers.size()) {
 			return nullptr;
 		}
 
-		Layer *layer = m_Layers.back();
+		LayerPtr layer = m_Layers.back();
 		m_Layers.pop_back();
 		return layer;
 	}
 
-	void LayerStack::RemoveOverlay(Layer* layer)
+	void LayerStack::RemoveOverlay(LayerPtr layer)
 	{
-		auto begin = m_LayerInsert + 1;
+		auto begin = m_Layers.begin() + m_LayerInsert;
 		auto it = std::find(begin, m_Layers.end(), layer);
 		if (it != m_Layers.end())
-		{
 			m_Layers.erase(it);
-		}
 	}
 
 	void LayerStack::Destroy()
 	{
-		_CleanUp();
 		m_Layers.erase(m_Layers.begin(), m_Layers.end());
-		m_LayerInsert = m_Layers.begin();
+		m_LayerInsert = 0;
 	}
 
 	void LayerStack::OnUpdate()
@@ -82,11 +83,5 @@ namespace Filbert {
 			if (e.IsHandled())
 				break;
 		}
-	}
-
-	void LayerStack::_CleanUp()
-	{
-		for (auto layer : m_Layers)
-			delete layer;
 	}
 }
