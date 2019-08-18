@@ -7,13 +7,13 @@ namespace Filbert
 	typedef Vector2<double> MousePosition;
 	typedef Vector2<ui32> MouseScroll;
 
-	class FLB_API MouseEvent : public Event
+	class MouseEvent : public Event
 	{
 	public:
 		EVENT_CLASS_CATEGORY(EC_Input | EC_Mouse)
 	};
 
-	class FLB_API MouseButtonEvent : public MouseEvent
+	class MouseButtonEvent : public MouseEvent
 	{
 	public:
 		inline MouseCode GetButton() const { return m_Button; }
@@ -22,21 +22,21 @@ namespace Filbert
 		MouseCode m_Button;
 	};
 	
-	class FLB_API MouseButtonPressedEvent : public MouseButtonEvent
+	class MouseButtonPressedEvent : public MouseButtonEvent
 	{
 	public:
 		MouseButtonPressedEvent(const MouseCode& button) : MouseButtonEvent(button) {}
 		EVENT_CLASS_TYPE(MouseButtonPressed)
 	};
 
-	class FLB_API MouseButtonReleasedEvent : public MouseButtonEvent
+	class MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
 		MouseButtonReleasedEvent(const MouseCode& button) : MouseButtonEvent(button) {}
 		EVENT_CLASS_TYPE(MouseButtonReleased)
 	};
 
-	class FLB_API MouseMovedEvent : public MouseEvent
+	class MouseMovedEvent : public MouseEvent
 	{
 	public:
 		MouseMovedEvent(const double& x, const double& y) : m_Position(x, y) {}
@@ -48,7 +48,7 @@ namespace Filbert
 		MousePosition m_Position;
 	};
 
-	class FLB_API MouseScrolledEvent : public MouseEvent
+	class MouseScrolledEvent : public MouseEvent
 	{
 	public:
 		MouseScrolledEvent(cui32& xOffset, cui32& yOffset) : m_Offset(xOffset, xOffset) {}

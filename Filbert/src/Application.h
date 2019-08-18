@@ -6,7 +6,7 @@
 
 namespace Filbert
 {
-	class FLB_API Application
+	class Application
 	{
 	public:
 		Application();

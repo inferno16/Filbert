@@ -5,7 +5,7 @@
 namespace Filbert {
 	typedef std::shared_ptr<Layer> LayerPtr;
 
-	class FLB_API LayerStack
+	class LayerStack
 	{
 	public:
 		LayerStack();

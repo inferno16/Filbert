@@ -3,7 +3,7 @@
 
 namespace Filbert
 {
-	class FLB_API JoystickEvent : public Event
+	class JoystickEvent : public Event
 	{
 	protected:
 		JoystickEvent(cui32& code) : m_ControlCode(code) {}
@@ -13,7 +13,7 @@ namespace Filbert
 		ui32 m_ControlCode;
 	};
 
-	class FLB_API JoystickButtonPressedEvent : public JoystickEvent
+	class JoystickButtonPressedEvent : public JoystickEvent
 	{
 	public:
 		JoystickButtonPressedEvent(cui32& code, cui32& count) : JoystickEvent(code), m_Repeated(count) {}
@@ -23,14 +23,14 @@ namespace Filbert
 		ui32 m_Repeated;
 	};
 
-	class FLB_API JoystickButtonReleasedEvent : public JoystickEvent
+	class JoystickButtonReleasedEvent : public JoystickEvent
 	{
 	public:
 		JoystickButtonReleasedEvent(cui32& code) : JoystickEvent(code) {}
 		EVENT_CLASS_TYPE(JoystickButtonReleased)
 	};
 
-	class FLB_API JoystickAxisEvent : public JoystickEvent
+	class JoystickAxisEvent : public JoystickEvent
 	{
 	public:
 		JoystickAxisEvent(cui32& axis, ci32& value) : JoystickEvent(axis), m_AxisValue(value) {}

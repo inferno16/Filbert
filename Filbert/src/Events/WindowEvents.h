@@ -3,20 +3,20 @@
 
 namespace Filbert
 {
-	class FLB_API WindowEvent : public Event
+	class WindowEvent : public Event
 	{
 	public:
 		EVENT_CLASS_CATEGORY(EC_Window)
 	};
 
-	class FLB_API WindowClosedEvent : public WindowEvent
+	class WindowClosedEvent : public WindowEvent
 	{
 	public:
 		WindowClosedEvent() {}
 		EVENT_CLASS_TYPE(WindowClosed)
 	};
 
-	class FLB_API WindowResizedEvent : public WindowEvent
+	class WindowResizedEvent : public WindowEvent
 	{
 	public:
 		WindowResizedEvent(cui32& width, cui32& height) : m_Width(width), m_Height(height) {}
@@ -26,7 +26,7 @@ namespace Filbert
 		ui32 m_Height;
 	};
 
-	class FLB_API WindowFocusChangedEvent : public WindowEvent
+	class WindowFocusChangedEvent : public WindowEvent
 	{
 	public:
 		WindowFocusChangedEvent(const bool& gained) : m_Focused(gained) {}
@@ -35,7 +35,7 @@ namespace Filbert
 		bool m_Focused;
 	};
 
-	class FLB_API WindowMovedEvent : public WindowEvent
+	class WindowMovedEvent : public WindowEvent
 	{
 	public:
 		WindowMovedEvent(cui32& x, cui32& y) : m_X(x), m_Y(y) {}

@@ -6,7 +6,7 @@
 namespace Filbert {
 	typedef std::shared_ptr<spdlog::logger> Logger;
 
-	class FLB_API Log
+	class Log
 	{
 	public:
 		static void Init();

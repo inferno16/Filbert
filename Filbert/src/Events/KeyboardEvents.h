@@ -4,7 +4,7 @@
 
 namespace Filbert
 {
-	class FLB_API KeyEvent : public Event
+	class KeyEvent : public Event
 	{
 	protected:
 		KeyEvent(const KeyCode& code) : m_KeyCode(code) {}
@@ -16,7 +16,7 @@ namespace Filbert
 		KeyCode m_KeyCode;
 	};
 
-	class FLB_API KeyPressedEvent : public KeyEvent
+	class KeyPressedEvent : public KeyEvent
 	{
 	public:
 		KeyPressedEvent(const KeyCode& code, const bool& repeated) : KeyEvent(code), m_Repeated(repeated) {}
@@ -26,7 +26,7 @@ namespace Filbert
 		bool m_Repeated;
 	};
 
-	class FLB_API KeyReleasedEvent : public KeyEvent
+	class KeyReleasedEvent : public KeyEvent
 	{
 	public:
 		KeyReleasedEvent(const KeyCode& code) : KeyEvent(code) {}

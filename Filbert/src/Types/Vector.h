@@ -3,7 +3,7 @@
 namespace Filbert
 {
 	template<typename T>
-	class FLB_API Vector2
+	class Vector2
 	{
 	public:
 		T X, Y;
@@ -14,7 +14,7 @@ namespace Filbert
 	};
 
 	template<typename T>
-	class FLB_API Vector3
+	class Vector3
 	{
 	public:
 		T X, Y, Z;

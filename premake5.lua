@@ -9,6 +9,7 @@ workspace "Filbert"
     startproject "Sandbox"
     language "C++"
     cppdialect "C++17"
+    staticruntime "On"
     architecture "x64"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -41,6 +42,7 @@ workspace "Filbert"
     filter "configurations:Debug"
         defines { "DEBUG" }
         optimize "Debug"
+        symbols "On"
 
     filter "configurations:Release"
         defines { "NDEBUG" }
@@ -56,7 +58,7 @@ workspace "Filbert"
 
     project "Filbert"
         location "Filbert"
-        kind "SharedLib"
+        kind "StaticLib"
         defines { "FLB_BUILD_DLL" }
 
         pchheader("filbertPCH.h")
@@ -71,11 +73,6 @@ workspace "Filbert"
         includedirs
         {
             "Filbert/vendor/GLFW/include"
-        }
-
-        postbuildcommands
-        {
-            ("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
         }
 
     project "Sandbox"

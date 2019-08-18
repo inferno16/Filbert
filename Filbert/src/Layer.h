@@ -4,7 +4,7 @@
 
 namespace Filbert {
 
-	class FLB_API Layer
+	class Layer
 	{
 	public:
 		Layer(const std::string& name);

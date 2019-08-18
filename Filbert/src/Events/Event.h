@@ -29,7 +29,7 @@ namespace Filbert
 
 #define EVENT_CLASS_CATEGORY(category) virtual ui32 GetCategoryFlags() const override { return category; }
 
-	class FLB_API Event
+	class Event
 	{
 		friend class EventDispatcher;
 	public:

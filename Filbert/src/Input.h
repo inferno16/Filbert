@@ -271,7 +271,7 @@ namespace Filbert
 
 	typedef int JoyCode; // Placeholder
 
-	class FLB_API Input
+	class Input
 	{
 	public:
 		static inline bool IsKeyPressed(const KeyCode& key) { return s_Instance->_IsKeyPressed(key); }
