@@ -25,7 +25,7 @@ case "$unameOut" in
 esac
 premakeBinary="vendor/premake/$platform/premake5"
 
-printf "Available actions: vs2005, vs2008, vs2010, vs2012, vs2013, vs2015, vs2017, gmake, xcode4, codelite\n"
+printf "Available actions: vs2005, vs2008, vs2010, vs2012, vs2013, vs2015, vs2017, 2019, gmake, gmake2, xcode4, codelite, clean\n"
 printf "Default action: $defaultAction\n\n"
 read -p "Enter action and press enter (leave blank to use default): " action
 if [[ -z "$action" ]]; then
